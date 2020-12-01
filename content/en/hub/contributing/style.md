@@ -136,7 +136,7 @@ Then use the `figure` shortcode in your article to link to the image and define 
 You can also use HTML to link to an image file that is relative to the site `/static/` directory:
 
 ```
-<img src="/images/network-interfaces.png">
+<img src="/images/network-interfaces.png" width='700px'>
 ```
 
 ### Admonition Boxes
@@ -192,6 +192,8 @@ With non-breaking space: Click the <i class="fas fa-ellipsis-v" aria-hidden="tru
 <i class="fa fa-eye" aria-hidden="true" title="eye"></i> = `<i class="fa fa-eye" aria-hidden="true" title="eye"></i>`
 
 <i class="fa fa-bars" aria-hidden="true" title="Menu"></i> = `<i class="fa fa-bars" aria-hidden="true" title="Menu"></i>`
+
+<i class="material-icons" aria-hidden="true" title="System Update">system_update_alt</i> = `<i class="material-icons" aria-hidden="true" title="System Update">system_update_alt</i>`
 
 ### Key Strokes
 

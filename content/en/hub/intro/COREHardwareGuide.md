@@ -4,7 +4,7 @@ description: "Official hardware guide for custom TrueNAS CORE systems."
 tags: ["TrueNAS CORE","Components"]
 ---
 
-Long-time TrueNAS CORE/FreeNAS users will never forget the FreeNAS 8.0 days when flashing an IBM M1015 controller card with LSI firmware was a right of passage, 3TB drives were the largest you could buy, and floods in Thailand would soon turn every hard drive into a valuable asset.
+Long-time TrueNAS CORE/FreeNAS users will never forget the FreeNAS 8.0 days when flashing an IBM M1015 controller card with LSI firmware was a rite of passage, 3TB drives were the largest you could buy, and floods in Thailand would soon turn every hard drive into a valuable asset.
 
 Fast-forward to the amazing new [TrueNAS Minis](https://www.truenas.com/truenas-mini/) and a streamlined user experience through the intuitive [web interface](https://www.truenas.com/truenas-core/) to see just how much has changed in the TrueNAS ecosystem.
 While the TrueNAS Mini and FreeNAS certified are excellent turn-key systems, we appreciate that do-it-yourself users have always played a critical role in the growth and success of TrueNAS CORE/FreeNAS around the world.
@@ -338,6 +338,24 @@ The “Network” in “Network Attached Storage” is obviously just as importa
 * Intel and Chelsio interfaces are the best [supported options](https://www.freebsd.org/releases/11.3R/hardware.html#ethernet).
 * Only consider a “jumbo frames” [MTU](https://en.wikipedia.org/wiki/Maximum_transmission_unit) with dedicated connections such as between servers or video editors and TrueNAS that are not likely to experience packet fragmentation.
 * Interfaces with [LRO](https://en.wikipedia.org/wiki/Large_receive_offload) and [LSO](https://en.wikipedia.org/wiki/Large_send_offload) offload features will generally alleviate the need for jumbo frames and their use can result in lower CPU overhead.
+
+### High Speed Interconnects
+
+As the pace of hardware developement increases and enterprises upgrade at a faster pace, higher bandwidth hardware is becoming more and more accessible.
+It's now realistic for home labs to employ 40GB and higher networking components.
+Home users are now discovering the same complications with these speeds that have been found by Enterprise customers.
+
+iXsystems highly recommends using Optical Fiber over Direct Attached Copper (DAC) cables for the high speed interconnects listed below:
+
+* 10Gb NICs: SFP+ connectors
+* 25Gb NICs: SFP28 connectors
+* 40Gb NICs: QSFP+ connectors
+* 100Gb NICs: QSFP28 connectors
+* 200Gb NICs: QSFP56 connectors
+* 400Gb NICs: QSFP-DD connectors
+
+iXsystems also recommends using optical fiber for any of the aforementioned transceiver form factors when using Fibre Channel.
+Direct Attached Copper (DAC) cables could create interoperability issues between the NIC, cable and switch.
 
 ## Virtualized TrueNAS CORE
 

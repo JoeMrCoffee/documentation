@@ -4,8 +4,6 @@ description: "Configuring Self-Encrypted Drives."
 tags: ["encryption","security"]
 ---
 
-## Self-Encrypting Drives
-
 TrueNAS version 11.1-U5 introduced Self-Encrypting Drive (SED) support.
 
 These SED specifications are supported:
@@ -26,7 +24,7 @@ TCG Pyrite [Version 1](https://trustedcomputinggroup.org/wp-content/uploads/TCG_
 
 See this Trusted Computing Group® and NVM Express® [joint white paper](https://nvmexpress.org/wp-content/uploads/TCGandNVMe_Joint_White_Paper-TCG_Storage_Opal_and_NVMe_FINAL.pdf) for more details about these specifications.
 
-TrueNAS® implements the security capabilities of [camcontrol](https://www.freebsd.org/cgi/man.cgi?query=camcontrol) for legacy devices and [sedutil-cli](https://www.mankier.com/8/sedutil-cli) for TCG devices. When managing a SED from the command line, it is recommended to use the `sedhelper` wrapper script for `sedutil-cli` to ease SED administration and unlock the full capabilities of the device. Examples of using these commands to identify and deploy SEDs are provided below.
+TrueNAS implements the security capabilities of [camcontrol](https://www.freebsd.org/cgi/man.cgi?query=camcontrol) for legacy devices and [sedutil-cli](https://www.mankier.com/8/sedutil-cli) for TCG devices. When managing a SED from the command line, it is recommended to use the `sedhelper` wrapper script for `sedutil-cli` to ease SED administration and unlock the full capabilities of the device. Examples of using these commands to identify and deploy SEDs are provided below.
 
 A SED can be configured before or after assigning the device to a pool.
 
@@ -35,15 +33,20 @@ By default, SEDs are not locked until the administrator takes ownership of them.
 A password-protected SED protects the data stored on the device when the device is physically removed from the system. This allows secure disposal of the device without having to first wipe the contents. Repurposing a SED on another system requires the SED password.
 
 ## Deploying SEDs
+
 Enter `sedutil-cli --scan` in the **Shell** to detect and list devices. The second column of the results identifies the drive type:
 
-`no` indicates a non-SED device
-`1` indicates a legacy TCG OPAL 1 device
-`2` indicates a modern TCG OPAL 2 device
-`L` indicates a TCG Opalite device
-`p` indicates a TCG Pyrite 1 device
-`P` indicates a TCG Pyrite 2 device
-`E` indicates a TCG Enterprise device
+| Character | Standard   |
+|-----------|------------|
+| no        | non-SED device |
+| 1         | Opal V1    |
+| 2         | Opal V2    |
+| E         | Enterprise |
+| L         | Opalite    |
+| p         | Pyrite V1  |
+| P         | Pyrite V2  |
+| r         | Ruby       |
+
 Example:
 
 ```
@@ -59,7 +62,7 @@ Scanning for Opal compliant disks
 
 TrueNAS supports setting a global password for all detected SEDs or setting individual passwords for each SED. Using a global password for all SEDs is strongly recommended to simplify deployment and avoid maintaining separate passwords for each SED.
 
-### Setting a global password for SEDs
+### Setting a Global Password for SEDs
 
 Go to **System > Advanced > SED Password** and enter the password. **Record this password and store it in a safe place!**
 
@@ -76,7 +79,7 @@ da11                 [OK]
 
 Rerun `sedhelper setup <password>` every time a new SED is placed in the system to apply the global password to the new SED.
 
-### Creating separate passwords for each SED
+### Creating Separate Passwords for Each SED
 
 Go to **Storage > Disks**. Click the three dot menu (Options) for the confirmed SED, then **Edit**. Enter and confirm the password in the `SED Password` and `Confirm SED Password fields`.
 
@@ -114,7 +117,7 @@ Band[0]:
 
 ## Managing SED Passwords and Data
 
-This section contains command line instructions to manage SED passwords and data. The command used is [sedutil-cli(8)](https://www.mankier.com/8/sedutil-cli. Most SEDs are TCG-E (Enterprise) or TCG-Opal ([Opal v2.0](https://trustedcomputinggroup.org/wp-content/uploads/TCG_Storage-Opal_SSC_v2.01_rev1.00.pdf)). Commands are different for the different drive types, so the first step is identifying which type is being used.
+This section contains command line instructions to manage SED passwords and data. The command used is [sedutil-cli(8)](https://www.mankier.com/8/sedutil-cli). Most SEDs are TCG-E (Enterprise) or TCG-Opal ([Opal v2.0](https://trustedcomputinggroup.org/wp-content/uploads/TCG_Storage-Opal_SSC_v2.01_rev1.00.pdf)). Commands are different for the different drive types, so the first step is identifying which type is being used.
 
 {{% alert title="Warning" color="warning" %}}
 These commands can be destructive to data and passwords. Keep backups and use the commands with caution.
@@ -166,6 +169,12 @@ Wipe data and reset password using the PSID: `sedutil-cli --yesIreallywanttoERAS
 
 ## TCG-E Instructions
 
+### Change or Reset the Password without Destroying Data
+
+These commands must be run for every *LockingRange* or *band* on the drive.
+To determine the number of bands on a drive, use `sedutil-cli -v --listLockingRanges </dev/device>`.
+Increment the `BandMaster` number and rerun the command with `--setPassword` for every band that exists.
+
 Use **all** of these commands to reset the password without losing data:
 
 ```
@@ -184,7 +193,9 @@ sedutil-cli --setPassword <oldpassword> BandMaster0 <newpassword> </dev/device>
 sedutil-cli --setPassword <oldpassword> BandMaster1 <newpassword> </dev/device>
 ```
 
-Wipe data and reset password to default MSID:
+### Reset Password and Wipe Data
+
+Reset to default MSID:
 
 ```
 sedutil-cli --eraseLockingRange 0 <password> </dev/device>
@@ -192,4 +203,10 @@ sedutil-cli --setSIDPassword <oldpassword> "" </dev/device>
 sedutil-cli --setPassword <oldpassword> EraseMaster "" </dev/device>
 ```
 
-Wipe data and reset password using the PSID: `sedutil-cli --yesIreallywanttoERASEALLmydatausingthePSID <PSINODASHED> </dev/device>` where <PSINODASHED> is the PSID located on the physical drive with no dashes (-).
+Reset using the PSID: 
+
+`sedutil-cli --PSIDrevertAdminSP <PSIDNODASHS> /dev/<device>`
+
+If it fails use:
+
+`sedutil-cli --PSIDrevert <PSIDNODASHS>  /dev/<device>`

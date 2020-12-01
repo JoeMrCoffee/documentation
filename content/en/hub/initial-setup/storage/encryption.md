@@ -1,11 +1,20 @@
 ---
 title: "Encryption"
 description: "Native ZFS Encryption in TrueNAS"
-tags: ["ZFS","encryption","security"]
+tags: ["ZFS","encryption","security","dataset","snapshots"]
 ---
 
 You can encrypt the root dataset of a new storage pool to further increase data security.
 Please note that you will be responsible to remember or otherwise back up passphrases or other access methods to your encrypted data.
+
+Data-at-rest encryption is available with:
+
++ [Self Encrypting Drives (SEDs)]({{< ref "sed-drives.md" >}}) using OPAL or FIPS 140.2 (Both [AES 256](https://csrc.nist.gov/projects/cryptographic-standards-and-guidelines/archived-crypto-projects/aes-development))
++ Encryption of specific datasets (AES-256-GCM in TrueNAS 12.0)
+
+Keys for data-at-rest are managed on the local TrueNAS system.
+The user is responsible for storing and securing their keys.
+The [Key Management Interface Protocol (KMIP)](https://docs.oasis-open.org/kmip/spec/v1.1/os/kmip-spec-v1.1-os.html) is included in TrueNAS 12.0.
 
 ## Encrypting a Storage Pool
 
@@ -22,7 +31,7 @@ The default encryption cipher is recommended, but there are other ciphers availa
 ### Encrypting a New Dataset
 
 New datasets within an existing storage pool can also be encrypted without having to encrypt the entire pool.
-To encrypt a single dataset, go to **Storage > Pools**, open the <i class="fas fa-ellipsis-v"></i> (Options) for an existing dataset, and click **Add Dataset**.
+To encrypt a single dataset, go to **Storage > Pools**, open the <i class="fas fa-ellipsis-v"></i>&nbsp (Options) for an existing dataset, and click **Add Dataset**.
 Look at the *Encryption Options* and, if the parent dataset is unencrypted, unset the **Inherit** option.
 You can then set the **Encryption** option for the new dataset and configure the *Type* and other options.
 
@@ -39,7 +48,7 @@ Manually back up a root dataset keyfile by clicking the gear menu and selecting 
 <img src="/images/TN-12.0-encryption-8.PNG">
 <br><br>
 
-To change the keyfile, click <i class="fas fa-ellipsis-v"></i> (Options) and select **Encryption Options**.  
+To change the keyfile, click <i class="fas fa-ellipsis-v"></i>&nbsp (Options) and select **Encryption Options**.  
 
 <img src="/images/TN-12.0-encryption-4.PNG">
 <br><br>
@@ -51,7 +60,7 @@ Enter your custom key or click **Generate Key**. Remember to back up your keyfil
 
 ## Passphrase
 
-To use a passphrase instead of a keyfile, click <i class="fas fa-ellipsis-v"></i> (Options) and select **Encryption Options**.
+To use a passphrase instead of a keyfile, click <i class="fas fa-ellipsis-v"></i>&nbsp (Options) and select **Encryption Options**.
 Change the *Encryption Type* from `Key` to `Passphrase`.
 
 <img src="/images/TN-12.0-encryption-6.PNG">
@@ -70,8 +79,14 @@ Must be longer than 8 characters
 
 ## Locking and Unlocking Datasets
 
+Status of a dataset can be determined based on the icon used after the name.  
+
+Dataset Unlocked Icon : <i class="material-icons" aria-hidden="true" title="<unlocked>">lock_open</i>
+
+Dataset Locked Icon : <i class="material-icons" aria-hidden="true" title="<locked>">lock</i>
+
 Encrypted datasets can only be locked and unlocked if they are secured with a passphrase instead of a keyfile.
-Before locking a dataset, verify that it is not currently in use, then click <i class="fas fa-ellipsis-v" aria-hidden="true" title="Options"></i> (Options) and **Lock**.
+Before locking a dataset, verify that it is not currently in use, then click <i class="fas fa-ellipsis-v" aria-hidden="true" title="Options"></i>&nbsp (Options) and **Lock**.
 
 <img src="/images/TN-12.0-encryption-10.PNG">
 <br><br>
@@ -89,7 +104,7 @@ A dialog window remains visible while the dataset is locked.
 After locking a dataset, the unlock icon changes to a locked icon.
 While the dataset is locked, it is not available for use.
 
-To unlock a dataset, click <i class="fas fa-ellipsis-v" aria-hidden="true" title="Options"></i> (Options) and **Unlock**.
+To unlock a dataset, click <i class="fas fa-ellipsis-v" aria-hidden="true" title="Options"></i>&nbsp (Options) and **Unlock**.
 
 <img src="/images/TN-12.0-encryption-13.PNG">
 <br><br>
@@ -113,24 +128,56 @@ The dataset listing changes to show the unlocked icon.
 
 ## Conversion from GELI
 
-It is not possible to convert an existing FreeNAS/TrueNAS 11.3 or earlier GELI-encrypted pool to use native ZFS encryption.
-However, data can be migrated from the GELI-encrypted pool to a new ZFS-encrypted pool. The new ZFS-encrypted pool must be at least the same size as the previous GELI-encrypted pool. Two options exist to migrate data from a GELI-encrypted pool to a new ZFS-encrypted pool. The first method is to use `rsync` to copy the data between the pools. The second method is to use ZFS send/receive commands.
+It is not possible to *convert* an existing FreeNAS/TrueNAS 11.3 or earlier GELI-encrypted pool to use native ZFS encryption.
+
+## Migration from GELI
+
+Data can be *migrated* from the GELI-encrypted pool to a new ZFS-encrypted pool.
+Be sure to unlock the GELI-encrypted pool before attempting any data migrations.
+The new ZFS-encrypted pool must be at least the same size as the previous GELI-encrypted pool.
+Two options exist to migrate data from a GELI-encrypted pool to a new ZFS-encrypted pool: file transfer or ZFS send/receive.
+
+{{% pageinfo %}}
+In future TrueNAS versions, a decrypted GELI pool will be able to migrate data to a new ZFS encrypted pool using an advanced Replication Task ([NAS-107463](https://jira.ixsystems.com/browse/NAS-107463)).
+Until this time, GELI encrypted pools will continue to be detected and supported in the TrueNAS web interface, so you are not required to immediately migrate data away from GELI pools.
+Before using the command line to migrate data, it is recommended to consider the benefits and drawbacks of immediately migrating from GELI to ZFS.
+{{% /pageinfo %}}
+
+ZFS data migration can be a complicated process.
+You can ask for assistance in the [TrueNAS Community Forums](https://www.ixsystems.com/community/) or, if you have a support contract with iXsystems, [contact iX Support](/hub/additional-topics/support/#support-in-truenas-enterprise) for assistance.
+
+### File Transfer
+
+The first method is to use `rsync` or other file transfer mechanisms (`scp`, `cp`, `sftp`, `ftp`, `rdiff-backup`) to copy the data between the pools.
 
 {{% alert title=Warning color=warning %}}
-The following is an example walkthrough. It is not an exact step-by-step guide for all situations. Research ZFS [send](https://openzfs.github.io/openzfs-docs/man/8/zfs-send.8.html)/[receive](https://openzfs.github.io/openzfs-docs/man/8/zfs-receive.8.html) before attempting this. There are many edge cases that cannot be covered by a simple example.
+Transfering your files in this method will not preserve file ACLs.
+{{% /alert %}}
+
+### ZFS Send and Receive
+
+The second method is to use ZFS send/receive commands.
+
+{{% alert title=Warning color=warning %}}
+The following is an example walkthrough. It is not an exact step-by-step guide for all situations. Research ZFS [send](https://openzfs.github.io/openzfs-docs/man/8/zfs-send.8.html)/[receive](https://openzfs.github.io/openzfs-docs/man/8/zfs-receive.8.html) before attempting this.  There are many edge cases that cannot be covered by a simple example.
+
+Do not delete your GELI dataset until you have verified you have successfully migrated the data.  Failure to do so may result in data loss.
 {{% /alert %}}
 
 Legend:
 ```
-GELI Pool = pool_a 
+GELI Pool = pool_a
+Origin Dataset = dataset_1
 Latest Snapshot of GELI Pool = snapshot_name
 ZFS Native Encrypted Pool = pool_b
-Receieving Dataset = dataset_1
+Receieving Dataset = dataset_2
 ```
 
 1. Create a new encrypted pool in **Storage > Pools**, as described at the [beginning of this article](#encrypting-a-storage-pool).
-2. Open the **Shell**. Make a new snapshot of the GELI pool with the data to be migrated: `zfs snapshot -r pool_a@snapshot_name`.
+2. Open the **Shell**. Make a new snapshot of the GELI pool and dataset with the data to be migrated: `zfs snapshot -r pool_a/dataset_1@snapshot_name`.
 3. Create a passphrase: `echo passphrase > /tmp/pass`.
-4. Use ZFS send/receive to transfer the data between pools: `zfs send -Rv pool_a@snapshot_name | zfs recv -o encryption=on -o keyformat=passphrase -o keylocation=file:///tmp/pass pool_b/dataset_1`.
+4. Use ZFS send/receive to transfer the data between pools: `zfs send -Rv pool_a/dataset_1@snapshot_name | zfs recv -o encryption=on -o keyformat=passphrase -o keylocation=file:///tmp/pass pool_b/dataset_2`.
 5. When the transfer is complete, go to **Storage > Pools** and lock the new dataset. After locking the dataset, immediately unlock it. TrueNAS prompts for the passphrase. After entering the passphrase and the pool is unlocked, you can delete the `/tmp/pass` file used for the transfer.
 6. If desired, you can convert the dataset to use a keyfile instead of a passphrase. To use a passphrase instead of a keyfile, open the dataset <i class="fas fa-ellipsis-v" aria-hidden="true" title="Options"></i> (Options) and click **Encryption Options**. Change the *Encryption Type* from **Passphrase** to **Key** and save. Remember to back up your keyfile immediately!
+7. Repeat this process for every dataset in the Pool that needs to be migrated.
+

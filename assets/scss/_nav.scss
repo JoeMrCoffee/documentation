@@ -27,7 +27,7 @@
 .td-navbar {
     background: $primary;
     box-shadow: 5px 5px 5px #D1D1D1;
-    min-height: 4rem;
+    min-height: 6em;
     margin: 0;
     z-index: 32;
 
@@ -36,7 +36,6 @@
         top: 0;
         width: 100%;
     }
-
 
     .navbar-brand {
         font-size: 0rem;
@@ -71,7 +70,7 @@
     }
 
     .dropdown {
-        min-width: 100px;
+        padding-right: 20px;
     }
 
     @include media-breakpoint-down(md) {
@@ -86,12 +85,13 @@
             font-size: .875rem;
 
             .nav-link {
-                padding-right: .25rem;
+                padding-right: 0;
                 padding-left: 0;
             }
 
             .navbar-nav {
                 padding-bottom: 2rem;
+                font-size: 82%;
                 overflow-x: auto;
                 white-space: nowrap;
                 -webkit-overflow-scrolling: touch;
