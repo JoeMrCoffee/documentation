@@ -1,58 +1,51 @@
-[![Actions Status](https://github.com/freenas/documentation/workflows/Publish%20Docs/badge.svg)](https://github.com/freenas/documentation/actions) ![Preview Build](https://github.com/freenas/documentation/workflows/Preview%20Build/badge.svg)
+<p align="center">
+ <a href="https://discord.gg/Q3St5fPETd"><img alt="Join Discord" src="https://badgen.net/discord/members/Q3St5fPETd/?icon=discord&label=Join%20the%20TrueNAS%20Community" /></a>
+ <a href="https://forums.truenas.com/"><img alt="Join Forums" src="https://badgen.net/badge/Forums/Post%20Now//purple" /></a>
+ <a href="https://jira.ixsystems.com"><img alt="File Issue" src="https://badgen.net/badge/Jira/File%20Issue//red?icon=jira" /></a>
+</p>
 
-# How To: Hugo Local Build
+Welcome to the TrueNAS Documentation Repository!
+The collected documentation for TrueNAS software, hardware, and TrueCommand is stored here.
+These files are used to build the TrueNAS Documentation Hub available at https://www.truenas.com/docs/.
 
-The documentation repository can be downloaded locally. This may be
-desired if you prefer using a specific text editor other than the
-in-browser Github editor to develop content.
+Software documentation is released under the Creative Commons license.
 
-Part of the theme requires
-<code><a href="https://postcss.org/"> PostCSS</a></code>. To install
-`PostCSS`, a recent version of
-<code><a href="https://nodejs.org/en/"> NodeJS</a></code> must be
-installed on your machine so that you can use `npm`. Once installed,
-type
+# Technologies
 
-```bash
-sudo npm install -D --save autoprefixer
-sudo npm install -D --save postcss-cli
-```
-in the CLI.
+* [CommonMark ](https://spec.commonmark.org/current/) and [HTML](https://www.w3schools.com/html/default.asp) governs the syntax for content files.
+* [Hugo](https://gohugo.io/) (extended version) builds the website from the content files and governs the file organization, naming, front matter, and some of the [shortcode](https://gohugo.io/content-management/shortcodes/) syntax.
+* The custom [GeekDocs theme](https://geekdocs.de/) provides a bare-bones theme with templates and shortcodes for styling the website and content.
+* Specific .css customizations are added on top of GeekDocs in the /static/custom.css, /data/menu/, and /layouts/ files
 
-## Download Hugo
+# Install Hugo
 
-First, download the **extended** version of Hugo from
-https://github.com/gohugoio/hugo/releases/. Follow the
-[Hugo install instructions](https://gohugo.io/getting-started/installing/ "Install Hugo")
-for the appropriate operating system.
+1. Download Hugo Extended v0.157.0 from [https://github.com/gohugoio/hugo/releases/](https://github.com/gohugoio/hugo/releases/tag/v0.157.0) and [install](https://gohugo.io/getting-started/installing/ "Install Hugo").
 
-See these instructions for manually installing the Hugo extended version in WSL: https://sal.as/post/install-hugo-on-wsl/
+   > **Important:** Hugo Extended (not standard Hugo) is required to build this site.
+   > The repository has been tested against **Hugo Extended v0.157.0**.
+   > Later versions may work but have not been officially tested — if you encounter build errors,
+   > ensure you are using the recommended version.
+   >
+   > **Windows (Chocolatey — recommended):** Run PowerShell as Administrator, then:
+   > `choco install hugo-extended --version=0.157.0`
+   >
+   > **Windows (winget):**
+   > `winget install Hugo.Hugo.Extended --version 0.157.0`
+   >
+   > **WSL/Linux:** Download `hugo_extended_0.157.0_linux-amd64.tar.gz` from the releases page above and install to your PATH. For step-by-step WSL setup instructions, see https://sal.as/post/install-hugo-on-wsl/
 
-## Clone Documentation Repo
+2. Download this repository.
 
-The next step is to clone this repo. To clone the repo in your current
-directory, type
+# Local Build Process
 
-```bash
-git clone https://github.com/freenas/documentation.git
-```
+Open the downloaded repository in a terminal program like Windows PowerShell, then enter `hugo serve`.
+When complete, a local copy of the website is available.
+Enter <code>//localhost:<i>1313</i>/</code> in a browser address bar, where <code><i>1313</i></code> is the port number shown in the text output of the Hugo build status. In most cases this is `1313` but can be a different port number.
+Hugo automatically rebuilds the local copy to include any changes made and saved in your chosen text editor or integrated development environment (IDE).
 
-in the CLI.
+# Make File Changes
 
-> **Note**: To update your current local branch with any changes that have been merged into the master branch, run\
-`git pull origin master
-
-
-## Build Locally
-
-Finally, the documentation website is ready to be built locally. `cd` into the cloned repo. To
-build the website locally, type
-
-```bash
-hugo serve
-```
-
-in the CLI.
-
-After building the website with `hugo serve`, access it by entering
-`localhost:1313` in a browser address bar.
+1. Open your desired text editor (VS Code, Sublime Text, Atom, Notepad++, etc) and enter text changes using [CommonMark](https://spec.commonmark.org/0.31.2/) Markdown or [HTML](https://www.w3schools.com/html/default.asp) tags to format text.
+2. Save your changes and wait for modifications to show in the local build.
+3. Submit the pull request. 
+   If using GitHub Desktop, make sure you commit all desired changes to your working branch before creating the final pull request.

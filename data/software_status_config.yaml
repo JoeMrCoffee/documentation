@@ -1,0 +1,38 @@
+table_data:
+  developer:
+    enterprise:
+      version: Not Available
+      link: null
+    community:
+      version: 28 Nightly
+      link: https://iso.sys.truenas.net/TrueNAS-28-Nightlies/
+  early_adopter:
+    enterprise:
+      version: Not Available
+      link: null
+    community:
+      version: 27.0.0-RC.1
+      link: https://www.truenas.com/docs/scale/27/gettingstarted/versionnotes/#27.0.0-RC.1
+  general:
+    enterprise:
+      version: 25.10.7
+      link: https://www.truenas.com/docs/scale/25.10/gettingstarted/versionnotes/#25.10.7
+    community:
+      version: 25.10.7
+      link: https://www.truenas.com/docs/scale/25.10/gettingstarted/versionnotes/#25.10.7
+  mission_critical:
+    enterprise:
+      version: 25.10.7
+      link: https://www.truenas.com/docs/scale/25.10/gettingstarted/versionnotes/#25.10.7
+    community:
+      version: Not Available
+      link: null
+api_config:
+  base_url: https://update.sys.truenas.net/scale/
+  new_base_url: https://auto-public.sys.truenas.net/
+  trains_file: trains_v2.json
+profiles:
+  developer: DEVELOPER
+  early_adopter: EARLY_ADOPTER
+  general: GENERAL
+  mission_critical: MISSION_CRITICAL

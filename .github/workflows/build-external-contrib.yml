@@ -1,0 +1,40 @@
+# This is the workflow for external contributor
+
+name: 'External Contributor Build Preview'
+
+# Controls when the action will run.
+on:
+  pull_request_target:
+    branches: [master]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    if: github.event.pull_request.head.repo.full_name != github.repository
+    environment: CI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0         # Fetch all history for .GitInfo and .Lastmod
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2.6.0
+        with:
+          hugo-version: '0.145.0'
+          extended: true
+
+      - name: Install dependencies
+        run: pnpm i
+
+      - name: Print PNPM modules after install
+        run: du -d 0 -h ~/.pnpm-store/*/*/* || true
+
+      - name: Build Hugo Site
+        run: hugo -d public --gc --minify

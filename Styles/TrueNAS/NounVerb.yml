@@ -1,0 +1,11 @@
+extends: substitution
+message: "Use '%s' instead of '%s'"
+level: suggestion
+ignorecase: true
+swap:
+  'back up': 'backup'
+  'log in': 'login'
+  'sign in': 'signin'
+  'sign up': 'signup'
+  'check out': 'checkout'
+  'roll back': 'rollback'

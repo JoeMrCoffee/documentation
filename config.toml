@@ -1,229 +1,172 @@
-# Commenting your code is very useful.
 #baseURL = "https://www.truenas.com/docs/"
-title = "TrueNAS Documentation Hub"
-enableRobotsTXT = true
-relativeURLs = true
+title = ""
+theme = ["hugo-geekdoc"]
 
-
-# Hugo allows theme composition (and inheritance). The precedence is from left to right.
-theme = ["docsy"]
-
-# Will give values to .Lastmod etc.
+# Required to get well formatted code blocks
+pygmentsUseClasses = true
+pygmentsCodeFences = true
 enableGitInfo = true
 
-# Language settings
-contentDir = "content/en"
-defaultContentLanguage = "en"
-defaultContentLanguageInSubdir = false
-# Useful when translating.
-enableMissingTranslationPlaceholders = true
+# Required if you want to render robots.txt template
+enableRobotsTXT = true
 
-disableKinds = ["RSS"]
+#disableKinds = ["home"]
+relativeURLs = true
+disablePathToLower = false
+googlefonts = "//fonts.googleapis.com/css?family=Inter|Open+Sans|Merriweather|Fira+Mono|Droid+Sans"
+rssLimit = 10
+languageCode = "en-us"
+copyright = "Documentation distributed under CC BY NC SA 4.0"
+timeout = "70s"
 
-# Highlighting config
-pygmentsCodeFences = true
-pygmentsUseClasses = false
-# Use the new Chroma Go highlighter in Hugo.
-pygmentsUseClassic = false
-#pygmentsOptions = "linenos=table"
-# See https://help.farbox.com/pygments.html
-pygmentsStyle = "tango"
+[author]
+name = "The TrueNAS team and Community"
 
-# Configure how URLs look like per section.
-[permalinks]
-articles = "/:section/:year/:month/:day/:slug/"
+[outputs]
+section = ["HTML","RSS","print"]
+[outputFormats.PRINT]
+baseName = "index"
+isHTML = true
+mediaType = "text/html"
+path = "printview"
+permalinkable = false
 
-## Configuration for BlackFriday markdown parser: https://github.com/russross/blackfriday
-[blackfriday]
-plainIDAnchors = true
-hrefTargetBlank = true
-angledQuotes = false
-latexDashes = true
-
-# Image processing configuration.
-[imaging]
-resampleFilter = "CatmullRom"
-quality = 75
-anchor = "smart"
+[markup]
+  [markup.goldmark.renderer]
+    # Needed for mermaid shortcode
+    unsafe = true
+  [markup.tableOfContents]
+    startLevel = 1
+    endLevel = 9
 
 [services]
 [services.googleAnalytics]
-# Google Analytics replaced by Google Tag Manager, which is added directly to the baseof.html files in themes/docsy/layouts/ _default/ and hub/.
+# Google Tag Manager is added directly to the baseof.html files in themes/docsy/layouts/ _default/ and hub/.
 # GA disabled by commenting out shortcode in themes/docsy/layouts/partials/head.html.
 # Commenting id line only disables the feature described in [params.ui.feedback].
-id = "UA-2174408-20"
+id = "GTM-P87FM6K"
 
-# Language configuration
-
-[languages]
-[languages.en]
-description = "Information and how-to articles about TrueNAS software and products."
-languageName ="English"
-# Weight used for sorting.
-weight = 1
-
-[markup]
-  [markup.goldmark]
-    [markup.goldmark.renderer]
-      unsafe = true
-
-# Everything below this are Site Params
-
-[params]
-copyright = "iXsystems™"
-privacy_policy = "https://www.ixsystems.com/privacy-policy/"
-
-# First one is picked as the Twitter card image if not set on page.
-images = ["images/TrueNAS_favicon.png"]
-
-# Menu title if your navbar has a versions selector to access old versions of your site.
-# This menu appears only if you have at least one [params.versions] set.
-version_menu = "Version"
-
-# Repository configuration (URLs for in-page links to opening issues and suggesting changes)
-github_repo = "https://github.com/freenas/documentation"
-# An optional link to a related project repo. For example, the sibling repository where your product code lives.
-#github_project_repo = ""
-
-# Specify a value here if your content directory is not in your repo's root directory
-# github_subdir = ""
-
-# Google Custom Search Engine ID. Remove or comment out to disable search.
-#gcs_engine_id = "017685261477472164873:k0nt3bphaqi"
-
-# Enable Algolia DocSearch
-#algolia_docsearch = true
-
-# Enable Lunr.js offline search
-offlineSearch = true
-
-latest = "master"
-fullversion = "Current"
-version = "Current"
-githubbranch = "master"
-deprecated = false
-currentUrl = "https://truenas.com/docs/"
-githubWebsiteRepo = "github.com/freenas/documentation"
-githubWebsiteRaw = "raw.githubusercontent.com/freenas/documentation"
-
-# param for displaying an announcement block on every page; see PR #16210
-announcement = false
-# announcement_message is only displayed when announcement = true; update with your specific message
-announcement_message = "The TrueNAS Documentation team hopes you have a great day!"
-
-[taxonomies]
-tags = "tags"
-
+# Option to add estimated reading times to articles
 [params.ui.readingtime]
 enable = true
 
-# Entries for the "Version" dropdown
-[[params.versions]]
-fullversion = "TrueNAS 12.0"
-version = "Current (TN 12.0)"
-githubbranch = "master"
-url = "/"
+# Multi-site search configuration
+[params.search]
+  siteName = "TrueNAS Documentation"
+  siteKey = "docs"
+  siteIcon = "/favicon/TN-favicon-32x32.png"
+  sitePriority = 1
+  siteVersion = "27"
 
-[[params.versions]]
-fullversion = "TrueNAS 11.3"
-version = "TN 11.3"
-url = "https://www.ixsystems.com/documentation/truenas/11.3-U3.2/truenas.html"
+[params]
 
-[[params.versions]]
-fullversion = "FreeNAS 11.3"
-version = "FN 11.3"
-url = "https://www.ixsystems.com/documentation/freenas/11.3-U4/freenas.html"
+  # (Optional, default 6) Set how many table of contents levels to be showed on page.
+  # Use false to hide ToC, note that 0 will default to 6 (https://gohugo.io/functions/default/)
+  # You can also specify this parameter per page in front matter.
+  geekdocToC = 3
 
-[[params.versions]]
-fullversion = "TrueCommand 1.2"
-version = "TC 1.2"
-url = "/hub/additional-topics/legacy/tc-legacy-docs/truecommand-1.2/"
+  # (Optional, default static/brand.svg) Set the path to a logo for the Geekdoc
+  # relative to your 'static/' folder.
+  geekdocLogo = "/images/TN_Open_Enterprise_Storage_White_Version.png"
 
-# User interface configuration
-[params.ui]
-# Enable to show the side bar menu in its compact state.
-sidebar_menu_compact = true
-#  Set to true to disable breadcrumb navigation.
-breadcrumb_disable = false
-#  Set to true to hide the sidebar search box (the top nav search box will still be displayed if search is enabled)
-sidebar_search_disable = false
-#  Set to false if you don't want to display a logo (/assets/icons/logo.svg) in the top nav bar
-navbar_logo = true
-# Set to true to disable the About link in the site footer
-footer_about_disable = true
+  # (Optional, default false) Render menu from data file im 'data/menu/main.yaml'.
+  geekdocMenuBundle = false
 
-# Adds a H2 section titled "Feedback" to the bottom of each doc. The responses are sent to Google Analytics as events.
-# This feature depends on [services.googleAnalytics] and will be disabled if "services.googleAnalytics.id" is not set.
-# If you want this feature, but occasionally need to remove the "Feedback" section from a single page,
-# add "hide_feedback: true" to the page's front matter.
-[params.ui.feedback]
-enable = true
-# The responses that the user sees after clicking "yes" (the page was helpful) or "no" (the page was not helpful).
-yes = 'Glad to hear it! Please <a href="https://github.com/freenas/documentation/issues/new">tell us how we can improve</a>.'
-no = 'Sorry to hear that. Please <a href="https://github.com/freenas/documentation/issues/new">tell us how we can improve</a>.'
+  # (Optional, default false) Collapse all menu entries, can not be overwritten
+  # per page if enabled. Can be enabled per page via 'geekdocCollapseSection'.
+  geekdocCollapseAllSections = true
 
+  # (Optional, default true) Show page navigation links at the bottom of each
+  # docs page (bundle menu only).
+  geekdocNextPrev = true
 
-# Add dates to content pages
+  # (Optional, default true) Show a breadcrumb navigation bar at the top of each docs page.
+  # You can also specify this parameter per page in front matter.
+  geekdocBreadcrumb = true
+
+  # (Optional, default none) Set source repository location
+  # Used for 'Edit this page' links
+  # You can also specify this parameter per page in front matter.
+  geekdocRepo = "https://github.com/truenas/documentation"
+  github_repo = "https://github.com/truenas/documentation"
+
+  # (Optional, default none) Enable 'Edit this page' links. Requires 'GeekdocRepo' param
+  # and path must point to 'content' directory of repo.
+  # You can also specify this parameter per page in front matter.
+  geekdocEditPath = "edit/master/content"
+  pageheadEditPath = "edit/master"
+
+  # (Optional, default true) Enables search function with flexsearch.
+  # Index is built on the fly and might slowdown your website.
+  geekdocSearch = false
+
+  # (Optional, default false) Display search results with the parent folder as prefix. This
+  # option allows you to distinguish between files with the same name in different folders.
+  # NOTE: This parameter only applies when 'geekdocSearch = true'.
+  geekdocSearchShowParent = true
+
+  # (Optional, default none) Add a link to your Legal Notice page to the site footer.
+  # It can be either a remote url or a local file path relative to your content directory.
+  geekdocLegalNotice = "https://www.truenas.com/trademarks/"
+
+  # (Optional, default none) Add a link to your Privacy Policy page to the site footer.
+  # It can be either a remote url or a local file path relative to your content directory.
+  geekdocPrivacyPolicy = "https://www.truenas.com/privacy-policy/"
+
+  # (Optional, default true) Add an anchor link to headlines.
+  geekdocAnchor = true
+
+  # (Optional, default true) Copy anchor url to clipboard on click.
+  geekdocAnchorCopy = true
+
+  # Featured image for search results
+  featured_image = "/images/tn-openstorage-logo.png"
+  
+  # (Optional, default true) Enable or disable image lazy loading for images rendered
+  # by the 'img' shortcode.
+  geekdocImageLazyLoading = true
+
+  # (Optional, default false) Set HTMl <base> to .Site.BaseURL if enabled. It might be required
+  # if a subdirectory is used within Hugos BaseURL.
+  # See https://developer.mozilla.org/de/docs/Web/HTML/Element/base.
+  geekdocOverwriteHTMLBase = false
+
+  # (Optional, default true) Enable or disable the JavaScript based color theme toggle switch. The CSS based
+  # user preference mode still works.
+  geekdocDarkModeToggle = true
+
+  # (Optional, default false) Auto-decrease brightness of images and add a slightly grayscale to avoid
+  # bright spots while using the dark mode.
+  geekdocDarkModeDim = false
+
+  # (Optional, default false) Enforce code blocks to always use the dark color theme.
+  geekdocDarkModeCode = false
+
+  # (Optional, default true) Display a "Back to top" link in the site footer.
+  geekdocBackToTop = true
+
+  # (Optional, default false) Enable or disable adding tags for post pages automatically to the navigation sidebar.
+  geekdocTagsToMenu = true
+
+  # (Optional, default 'title') Configure how to sort file-tree menu entries. Possible options are 'title', 'linktitle',
+  # 'date', 'publishdate', 'expirydate' or 'lastmod'. Every option can be used with a reverse modifier as well
+  # e.g. 'title_reverse'.
+  geekdocFileTreeSortBy = "title"
+
+  # (Optional, default none) Adds a "Content licensed under <license>" line to the footer.
+  # Could be used if you want to define a default license for your content.
+  [params.geekdocContentLicense]
+    name = "CC BY-SA 4.0"
+    link = "https://creativecommons.org/licenses/by-sa/4.0/"
+  
+  [params.authors]
+    "The TrueNAS team and Community" = {}
+	
 [frontmatter]
-date = ["date", "publishDate", "lastmod"]
-lastmod = ["lastmod", ":fileModTime", ":default"]
-publishDate = ["publishDate", "date"]
-expiryDate = ["expiryDate"]
+lastmod = ["lastmod", ":git", ":fileModTime", ":default"]
 
-# Add Website Links
-[[params.websites]]
-	name = "TrueNAS"
-	url = "https://www.truenas.com"
-[[params.websites]]
-	name = "iXsystems"
-	url = "https://www.ixsystems.com"
-[[params.websites]]
-	name = "iX Account Services"
-	url = "https://portal.ixsystems.com"
-[[params.websites]]
-	name = "iX Library"
-	url = "https://www.ixsystems.com/library/"
-[[params.websites]]
-	name = "Community"
-	url = "https://www.ixsystems.com/community/"
-[[params.websites]]
-	name = "Security"
-	url = "https://security.ixsystems.com/"
-[[params.websites]]
-	name = "Blog"
-	url = "https://www.ixsystems.com/blog/"
-
-# Add Topics menu entries
-[[params.topics]]
-	name = "Home"
-	url = "/"
-[[params.topics]]
-	name = "Overview"
-	url = "/hub/intro/"
-[[params.topics]]
-	name = "Getting Started"
-	url = "/hub/initial-setup/"
-[[params.topics]]
-	name = "Sharing"
-	url = "/hub/sharing/"
-[[params.topics]]
-	name = "Tasks"
-	url = "/hub/tasks/"
-[[params.topics]]
-	name = "Solutions"
-	url = "/hub/solutions/"
-[[params.topics]]
-	name = "TrueNAS SCALE"
-	url = "/hub/scale/"
-[[params.topics]]
-	name = "TrueCommand"
-	url = "/hub/truecommand/"
-[[params.topics]]
-	name = "Hardware"
-	url = "/hub/hardware/"
-[[params.topics]]
-	name = "Additional Topics"
-	url = "/hub/additional-topics/"
-[[params.topics]]
-	name = "Contributing"
-	url = "/hub/contributing/"
+[taxonomies]
+  tags = "tags"
+  categories = "book"
+  volumes = "volume"
+  author = "authors"
